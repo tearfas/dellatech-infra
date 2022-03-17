@@ -1,6 +1,6 @@
+---
 - name: Patch Linux Systems
   hosts: all
-  become: yes
   tasks:
     - name: Scan systems for update 
       shell: "yum check-update  --quiet"
