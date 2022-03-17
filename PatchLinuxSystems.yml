@@ -12,9 +12,9 @@
         msg: "No Update Neccessary at this time"
       when: yum_result.rc != 100
 
-    - name: Packages to update 
-        var: yum_result.stdout_lines
-      when: yum_result.rc == 100
+    #- name: Packages to update 
+    #    var: yum_result.stdout_lines
+    #  when: yum_result.rc == 100
 
     - name: if error occurred
         msg: "An error occured while checking for Patches. Check that server out"
