@@ -1,5 +1,5 @@
 - name: Patch Linux Systems
-  host: all
+  hosts: all
   become: yes
   tasks:
     - name: Scan systems for update 
