@@ -7,10 +7,6 @@
       shell: "yum check-update  --quiet"
       register: yum_result
       ignore_errors: yes
-
-    - name: debug
-      debug:
-        var: yum_result
         
     - name: If no update neccessary 
       debug:
