@@ -15,7 +15,7 @@
 
     - name: Packages to update 
       debug:
-        var: yum_result.stdou_lines
+        var: yum_result.stdout_lines
       when: yum_result.rc == 100
 
     - name: if error occurred
