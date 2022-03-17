@@ -13,7 +13,7 @@
       when: yum_result.rc != 100
 
     - name: Packages to update 
-        var: yum_result.stdout_lines
+        var: yum_result.stdout
       when: yum_result.rc == 100
 
     - name: if error occurred
