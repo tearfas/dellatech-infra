@@ -1,0 +1,53 @@
+- name: Patch Linux Systems
+  host: all
+  become: yes
+  tasks:
+    - name: Scan systems for update 
+      shell: "yum check-update  --quiet"
+      register: yum_result
+      ignore_errors: yes
+
+    - name: If no update neccessary 
+      debug:
+        msg: "No Update Neccessary at this time"
+      when: yum_result.rc != 100
+
+    - name: Packages to update 
+        var: yum_result.stdout_lines
+      when: yum_result.rc == 100
+
+    - name: if error occurred
+        msg: "An error occured while checking for Patches. Check that server out"
+      when: yum_result.rc == 1
+
+    - name: email result of scan 
+      mail: 
+        subject: Linux Patch Result for {{ ansible_hostname}}
+        body: |
+          "Linux Host {{ ansible_hostname }} has the following outdated Packages 
+          {{ yum_result.stdout_lines | to_nice_yaml(indent=3)}}"
+        to:
+          - 'dellatechg@gmail.com'
+          - 'tearfas@yahoo.com'
+        cc: 
+          - 'tearfas@yahoo.com'
+      when: yum_result.rc == 1
+      delegate_to: localhost
+    
+    - name: Patch systems 
+      yum: 
+        name: "*"
+        state: latest 
+      when: install_patches is defined and install_patches == "yes" 
+
+    - name: Reboot if new kernel install
+      shell: |
+        LASTEST_KERNEL = `rpm -q kernel | tail -1`
+        CURRENT_KERNEL = kernel-`uname -r`
+        if [[ $LASTEST_KERNEL != $CURRENT_KERNEL ]];
+        then 
+          #Reboot system 
+          /usr/sbin/reboot
+        fi 
+      when: reboot_server is defined and reboot_server == "yes"
+            
