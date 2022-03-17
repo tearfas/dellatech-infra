@@ -13,10 +13,12 @@
       when: yum_result.rc != 100
 
     - name: Packages to update 
-        var: yum_result.stdout
+      debug:
+        var: yum_result.stdou_lines
       when: yum_result.rc == 100
 
     - name: if error occurred
+      debug:
         msg: "An error occured while checking for Patches. Check that server out"
       when: yum_result.rc == 1
 
